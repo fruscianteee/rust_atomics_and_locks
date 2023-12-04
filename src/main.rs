@@ -15,16 +15,19 @@ use std::{
 };
 
 fn main() {
-    let a = Arc::new([1, 2, 3]);
-    let b = a.clone();
+    let n = Mutex::new(0);
 
-    // assert_eq!(a.as_ptr(), b.as_ptr());
-    // thread::spawn(|| dbg!(a));
-    // thread::spawn(|| dbg!(b));
-    let a = RefCell::new(vec![10, 20]);
-    dbg!(&a);
-    f(&a);
-    dbg!(&a);
+    thread::scope(|s| {
+        for _ in 0..10 {
+            s.spawn(|| {
+                let mut guard = n.lock().unwrap();
+                for _ in 0..100 {
+                    *guard += 1;
+                }
+            });
+        }
+    });
+    assert_eq!(n.into_inner().unwrap(), 1000);
 }
 
 fn f(v: &RefCell<Vec<i32>>) {
