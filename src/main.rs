@@ -19,12 +19,22 @@ fn main() {
     let b = a.clone();
 
     // assert_eq!(a.as_ptr(), b.as_ptr());
-    thread::spawn(|| dbg!(a));
-    thread::spawn(|| dbg!(b));
+    // thread::spawn(|| dbg!(a));
+    // thread::spawn(|| dbg!(b));
+    f(&Cell::new(10), &Cell::new(20));
 }
 
-fn f() {
-    println!("hello from another thread!");
-    let id = thread::current().id();
-    println!("this is my thread id: {id:?}");
+fn f(a: &Cell<i32>, b: &Cell<i32>) {
+    let before = a.get();
+    b.set(b.get() + 1);
+    let after = a.get();
+    if before != after {
+        x();
+    } else {
+        println!("aa");
+    }
+}
+
+fn x() {
+    println!("x");
 }
