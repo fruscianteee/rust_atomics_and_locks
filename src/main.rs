@@ -1,3 +1,4 @@
+use std::time::Duration;
 #[allow(unused)]
 use std::{
     cell::{Cell, RefCell, UnsafeCell},
@@ -24,6 +25,8 @@ fn main() {
                 for _ in 0..100 {
                     *guard += 1;
                 }
+                drop(guard);
+                thread::sleep(Duration::from_secs(1))
             });
         }
     });
